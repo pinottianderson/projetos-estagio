@@ -1,0 +1,1007 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<prozessdef name="WFTest">
+	<aktion aktionlfnr="50" name="Einkaufspotential">
+		<beschreibung>Zeigt EK-Potential des Versicherten</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="V" createnewrow="false" deletepermission="false" querypermission="true">kdx.EinkaufPotenz</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>true</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pPENUM">
+			<mapping>
+				<parameter name="pPENUM"/>
+			</mapping>
+		</parameter>
+		<parameter name="pPROCNR">
+			<mapping>
+				<parameter name="pPROCNR"/>
+			</mapping>
+		</parameter>		
+	</aktion>
+	<aktion aktionlfnr="20" name="Austritt">
+		<beschreibung>Austritt</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="V" querypermission="true">ch.claninfo.pvclan.gui.generated.view.MassenStellenwechselView</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>true</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pSIMBEZL">
+			<mapping>
+				<parameter name="pSIMBEZL"/>
+			</mapping>
+		</parameter>
+		<parameter name="pSIMBEZK">
+			<mapping>
+				<parameter name="pSIMBEZK"/>				
+			</mapping>
+		</parameter>
+		<parameter name="pPENUM">
+			<mapping>
+				<parameter name="pPENUM"/>
+			</mapping>
+		</parameter>
+		<parameter name="pPROCNR" where="false">
+			<mapping>
+				<parameter name="pSIMPROCNR"/>
+			</mapping>
+		</parameter>
+		<konstante name="pVSPRAEM">0</konstante>
+	</aktion>
+	<aktion aktionlfnr="30" name="Simulation berechnen">
+		<beschreibung>Simulation berechnen</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="M">ch.claninfo.pvclan.gui.generated.method.SimBerINSMethod</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>false</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pPROCNR">
+			<mapping>
+				<parameter name="pPROCNR"/>
+			</mapping>
+		</parameter>
+	</aktion>
+	<aktion aktionlfnr="1" name="Startaktion" autoabschluss="true">
+		<beschreibung>Prozess akzeptieren/annehmen</beschreibung>
+		<pool>Common</pool>
+		<dummy>true</dummy>
+		<classname/>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>true</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pVSNUM_WF"/>
+		<parameter name="pPROZESS_BEM"/>
+		<parameter name="pPENUM_WF"/>
+		<parameter name="pBERDAT"/>
+	</aktion>
+	<aktion aktionlfnr="120" name="Prüfen auf Ablehnung">
+		<beschreibung>Prüfen auf Ablehnung</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="W"/>
+		<classconfig>
+			<gui-param name="pWEF" type="string" readonly="true">Betrag WEF vorhanden</gui-param>			
+			<gui-param name="pZA_120">
+				<select text="Prüfung Ablehnung">
+					<option>OK - Kein Ablehnungsgrund (in Simulation geprüft)</option>
+					<option>Ablehnung - Einzahlung vorhanden - verbuchen und zurückzahlen</option>
+				</select>
+			</gui-param>
+		</classconfig>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>true</mandatory>
+		<wiederholung>true</wiederholung>
+		<pendent>false</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pLABERDAT" globalparameter="true">
+			<mapping>
+				<parameter name="pBERDAT"/>
+			</mapping>
+		</parameter>
+		<parameter name="pVSNUM" globalparameter="true">
+			<mapping>
+				<parameter name="pVSNUM_WF"/>
+			</mapping>
+		</parameter>
+		<parameter name="pPENUM" globalparameter="true">
+			<mapping>
+				<parameter name="pPENUM_WF"/>
+			</mapping>
+		</parameter>
+		<parameter name="pPROZESS_BEM" globalparameter="true">
+			<mapping>
+				<parameter name="pPROZESS_BEM"/>
+			</mapping>
+		</parameter>
+		<parameter name="pPLTYP" globalparameter="true">
+			<mapping>
+            @IF ((@SELECT['pWERT', 'pvclan', 'PlanVarWert', 'pVSNUM=:N AND pPLANTYP=:S AND pVARNA=:S AND pBERDAT=:D AND pPROCNR=:N', pVSNUM_WF, 'LB', 'BSPLAN', @CVD[pBERDAT],0] &lt; 2) @OR (@SELECT['pWERT', 'pvclan', 'PlanVarWert', 'pVSNUM=:N AND pPLANTYP=:S AND pVARNA=:S AND pBERDAT=:D AND pPROCNR=:N', pVSNUM_WF, 'LB', 'BSPLAN', @CVD[pBERDAT],0] = 3)) @TH 'BP' @ELSE 'LP'
+			</mapping>
+		</parameter>
+		<parameter name="pBRIEFID">
+			<mapping>
+				<parameter name="pBRIEFID"/>
+			</mapping>
+		</parameter>	
+		<parameter name="pZA_120" globalparameter="true">
+			<mapping>
+            @IF @SELECT['pWERT', 'pvclan', 'PlanVarWert', 'pVSNUM=:N AND pPLANTYP=:S AND pVARNA=:S AND pBERDAT=:D AND pPROCNR=:N', pVSNUM_WF, 'LB', 'SUMWEF', @CVD[pBERDAT],0]	> 0 @TH '01' @ELSE '10'	
+			</mapping>
+		</parameter>
+		<parameter name="pWEF">
+			<mapping>
+            @IF @SELECT['pWERT', 'pvclan', 'PlanVarWert', 'pVSNUM=:N AND pPLANTYP=:S AND pVARNA=:S AND pBERDAT=:D AND pPROCNR=:N', pVSNUM_WF, 'LB', 'SUMWEF', @CVD[pBERDAT],0]	> 0 @TH 'Ja' @ELSE 'Nein'	
+			</mapping>
+		</parameter>
+		<check-before-close>
+			goto=@IF pZA_120='10' @TH -1 @ELSE 126;
+		</check-before-close>
+	</aktion>
+	<aktion aktionlfnr="125" name="Infodaten buchen (FZ,3a,Ausland)">	
+		<beschreibung>Infodaten buchen</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="V" createnewrow="true">ch.claninfo.pvclan.gui.generated.view.VersKontoView</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>false</mandatory>
+		<wiederholung>true</wiederholung>
+		<pendent>true</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pIKVALUTA">
+			<mapping>
+				<parameter name="pFIBU_VALUTA"/>
+			</mapping>
+		</parameter>
+		<parameter name="pIKKTOART">
+			<mapping>'INFO'</mapping>
+		</parameter>
+		<check-before-open>
+			enabled=pZA_120='10';
+		</check-before-open>
+	</aktion>
+	<aktion aktionlfnr="126" name="Auswahl FIBU-Zahlungseingänge">
+		<beschreibung>Anzeige FIBU-Zahlungseingänge</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="V" insertpermission="false" deletepermission="false" updatepermission="false" querypermission="true">pvclan.FibuzaeinWf</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>false</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pBUNR_FIBU" bonames="XXX"/>
+		<parameter name="pBUNR_TOT" bonames="XXX"/>
+		<parameter name="pFIBU_VALUTA" bonames="XXX"/>
+		<check-before-open>
+			enabled=pZA_120='01';
+		</check-before-open>
+	</aktion>
+	<aktion aktionlfnr="130" name="Einkaufs-Zahlung für Versicherten übernehmen">
+		<beschreibung>Einzkaufs-Zahlung für Versicherten übernehmen</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="M">ch.claninfo.pvclan.gui.generated.method.FibuzaeinUeberINSMethod</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>false</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pFIBU_VALUTA">
+			<mapping>
+				<parameter name="pFIBU_VALUTA"/>
+			</mapping>
+		<parameter name="pSTICHDAT">
+			<mapping>
+				<parameter name="pFIBU_VALUTA"/>
+			</mapping>
+		</parameter>
+		</parameter>	
+	       	<parameter name="pPROZESS_ID">
+			<mapping>prozessid</mapping>
+		</parameter>
+		<parameter name="pPLTYP">
+			<mapping>
+				<parameter name="pPLTYP"/>
+			</mapping>
+		</parameter>	
+		<parameter name="pKTOART_TOT">
+			<mapping>
+				@IF pPLTYP = 'LP' @TH 'BEWLP' @ELSE 'BEWBP'
+			</mapping>
+		</parameter>
+		<parameter name="pBUNR_FIBU">
+			<mapping>
+				<parameter name="pBUNR_FIBU"/>
+			</mapping>
+		</parameter>	
+		<konstante name="pBUART_TOT">134</konstante>
+		<check-before-open>
+			enabled=pZA_120='01';
+		</check-before-open>
+	</aktion>
+	<aktion aktionlfnr="175" name="Aufruf Rückzahlung" autoabschluss="true">
+		<beschreibung>WF silent</beschreibung>
+		<pool>Common</pool>
+		<aktiv>true</aktiv>
+		<dummy>false</dummy>
+		<classname type="P" executeMode="SYNC">WF_KAP_RZ</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>true</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<parameter name="pBERDAT">
+			<mapping>
+				<parameter name="pFIBU_VALUTA"/>
+			</mapping>
+		</parameter>	
+		<parameter name="pVSNUM_WF"> 
+			<mapping> 
+				<parameter name="pVSNUM"/> 
+			</mapping> 
+		</parameter> 
+        	<parameter name="pPROZESS_BEM">
+			<mapping>
+				<parameter name="pPROZESS_BEM"/>
+			</mapping>
+		</parameter>
+        	<parameter name="pWFTYP">
+			<mapping>
+				<parameter name="pWFTYP" defaultwert="EINK"/>
+			</mapping>
+		</parameter>
+        	<parameter name="pPOOL">
+			<mapping>session.uid</mapping>
+		</parameter>
+        	<parameter name="pINITIATOR_ID">
+			<mapping>prozessid</mapping>
+		</parameter>
+		<parameter name="pBRIEFID">
+			<mapping>
+				<parameter name="pBRIEFID"/>
+			</mapping>
+		</parameter>	
+		<check-before-open>
+			enabled=pZA_120='01';
+		</check-before-open>
+		<check-before-close>
+			goto=@IF pZA_120='01' @TH 999 @ELSE -1;
+		</check-before-close>
+	</aktion>
+	<aktion aktionlfnr="180" name="Einkaufsoptionen">
+   	    <beschreibung>Einkaufsoptionen</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="W"/>
+		<classconfig>
+			<gui-param name="pEKOPT_180">
+				<select text="Einkaufsoption">
+					<option>Nur Kapital</option>
+					<option>Nur Ratenzahlung und oder Zusatzbeitrag</option>
+					<option>Kapitaleinkauf mit Ratenzahlung</option>
+				</select>
+			</gui-param>
+		</classconfig>
+		<laufzeit>30</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>true</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pEKOPT_180" globalparameter="true"/>
+		<konstante name="pEKOPT_180">100</konstante>
+		<check-before-close>
+			goto=@IF pPLTYP='BP' @AND @SUBSTRING[pEKOPT_180,1,1]!='1' @TH 180 @ELIF @SUBSTRING[pEKOPT_180,2,1]='1' @TH 201 @ELSE -1;
+		</check-before-close>
+	</aktion>
+	<aktion aktionlfnr="185" name="Auswahl FIBU-Zahlungseingänge" autoabschluss="true">
+		<beschreibung>Anzeige FIBU-Zahlungseingänge</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="V" insertpermission="false" deletepermission="false" updatepermission="false" querypermission="true">pvclan.FibuzaeinWf</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>false</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pLABERDAT" globalparameter="true">
+			<mapping>
+				<parameter name="pBERDAT"/>
+			</mapping>
+		</parameter>
+		<parameter name="pVSNUM" globalparameter="true">
+			<mapping>
+				<parameter name="pVSNUM_WF"/>
+			</mapping>
+		</parameter>
+		<parameter name="pPROZESS_BEM" globalparameter="true">
+			<mapping>
+				<parameter name="pPROZESS_BEM"/>
+			</mapping>
+		</parameter>
+		<parameter name="pBUNR_FIBU" bonames="XXX"/>
+		<parameter name="pBUNR_TOT" bonames="XXX"/>
+		<parameter name="pFIBU_VALUTA" bonames="XXX"/>
+		<check-before-open>
+			enabled=@SUBSTRING[pEKOPT_180,2,1]!='1';
+		</check-before-open>
+	</aktion>
+	<aktion aktionlfnr="186" name="Einkaufs-Zahlung für Versicherten übernehmen">
+		<beschreibung>Einzkaufs-Zahlung für Versicherten übernehmen</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="M">ch.claninfo.pvclan.gui.generated.method.FibuzaeinUeberINSMethod</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>true</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<parameter name="pBUNR_FIBU" globalparameter="true">
+			<mapping>
+				<parameter name="pBUNR_FIBU"/>
+			</mapping>
+		</parameter>	
+		<parameter name="pBUNR_TOT" globalparameter="true">
+			<mapping>
+				<parameter name="pBUNR_TOT"/>
+			</mapping>
+		</parameter>	
+		<parameter name="pFIBU_VALUTA" globalparameter="true">
+			<mapping>
+				<parameter name="pFIBU_VALUTA"/>
+			</mapping>
+		</parameter>	
+		<parameter name="pSTICHDAT">
+			<mapping>
+				<parameter name="pFIBU_VALUTA"/>
+			</mapping>
+		</parameter>
+		<aktiv>true</aktiv>
+        	<parameter name="pPROZESS_ID">
+			<mapping>prozessid</mapping>
+		</parameter>
+		<parameter name="pPLTYP">
+			<mapping>
+				<parameter name="pPLTYP"/>
+			</mapping>
+		</parameter>	
+		<parameter name="pKTOART_TOT">
+			<mapping>
+				@IF pPLTYP = 'LP' @TH 'BEWLP' @ELSE 'BEWBP'
+			</mapping>
+		</parameter>
+		<konstante name="pBUART_TOT">134</konstante>
+		<check-before-open>
+			enabled=@SUBSTRING[pEKOPT_180,2,1]!='1';
+		</check-before-open>
+	</aktion>
+	<aktion aktionlfnr="190" name="Kapitaleinkauf einrechnen, Überschuss prüfen">
+		<beschreibung>Kapitaleinkauf einrechnen</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="M">ch.claninfo.pvclan.gui.generated.method.VersLeistINSMethod</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>true</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pVSNUM">
+			<mapping>
+				<parameter name="pVSNUM"/>
+			</mapping>
+		</parameter>
+		<parameter name="pBERDAT">
+			<mapping>
+				<parameter name="pFIBU_VALUTA"/>
+			</mapping>
+		</parameter>
+		<parameter name="pLABERDAT" globalparameter="true">
+			<mapping>
+				<parameter name="pFIBU_VALUTA"/>
+			</mapping>
+		</parameter>
+		<check-before-close>
+			goto=@IF @NUMBER[@SELECT['pWERT', 'pvclan', 'PlanVarWert', 'pVSNUM=:N AND pPLANTYP=:S AND pVARNA=:S AND pBERDAT=:D', pVSNUM, 'LB', 'EKUE', @CVD[pBERDAT]]] > 0 @OR
+			     @SUBSTRING[pEKOPT_180,1,1]='1'@TH 520 @ELSE -1;
+		</check-before-close>
+	</aktion>
+	<aktion aktionlfnr="195" name="Anzeige Überschuss" autoabschluss="true">
+		<beschreibung>Anzeige Überschuss</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<mandatory>true</mandatory>
+		<aktiv>true</aktiv>
+		<classname type="W"/>
+		<laufzeit>0</laufzeit>
+		<classconfig>
+			<gui-param name="pEKUE" type="string" readonly="true">Überschuss</gui-param>
+		</classconfig>	
+		<parameter name="pBERDAT">
+			<mapping>
+				<parameter name="pBERDAT"/>
+			</mapping>
+		</parameter>
+		<parameter name="pEKUE">
+		  <mapping>
+		  @NUMBER[@SELECT['pWERT', 'pvclan', 'PlanVarWert', 'pVSNUM=:N AND pPLANTYP=:S AND pVARNA=:S AND pBERDAT=:D', pVSNUM, 'LB', 'EKUE', @CVD[pBERDAT]]]
+		  </mapping>
+		</parameter>
+		<check-before-open>
+		  enabled=@NUMBER[@SELECT['pWERT', 'pvclan', 'PlanVarWert', 'pVSNUM=:N AND pPLANTYP=:S AND pVARNA=:S AND pBERDAT=:D', pVSNUM, 'LB', 'EKUE', @CVD[pBERDAT]]] > 0;
+		</check-before-open>
+		<check-before-close>
+			goto=@IF pEKUE > 0 @TH 520 @ELSE -1;
+		</check-before-close>
+	</aktion>	
+	<aktion aktionlfnr="200" name="Aktuelle Berechnung zurücksetzen" autoabschluss="true">
+		<beschreibung>Aktuelle Berechnung zurücksetzen</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="M">ch.claninfo.pvclan.gui.generated.method.VersLeistDELMethod</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>false</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pVSNUM">
+			<mapping>
+				<parameter name="pVSNUM"/>
+			</mapping>
+		</parameter>
+		<parameter name="pBERDAT">
+			<mapping>
+				<parameter name="pBERDAT"/>
+			</mapping>
+		</parameter>
+		<check-before-open>
+			enabled=@SUBSTRING[pEKOPT_180,1,1]='1';
+		</check-before-open>
+	</aktion>
+	<aktion aktionlfnr="201" name="Berechnungspendenz Einkaufspotential erstellen (Betrag 0 buchen)">	
+		<beschreibung>Berechnungspendenz Einkaufspotential erstellen (Betrag 0 buchen)</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="V" createnewrow="true">ch.claninfo.pvclan.gui.generated.view.VersKontoView</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>true</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>true</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pIKKTOART">
+			<mapping>
+				'WZB'
+			</mapping>
+		</parameter>
+		<parameter name="pIKVALUTA"/>
+		<konstante name="pIKBETRAG">0</konstante>
+		<konstante name="pIKBUART">407</konstante>
+		<check-before-open>
+			enabled=@SUBSTRING[pEKOPT_180,2,1]='1';
+		</check-before-open>
+	</aktion>
+	<aktion aktionlfnr="202" name="Berechnung Einkaufspotential">
+		<beschreibung>Berechnung Einkaufspotential</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="M">ch.claninfo.pvclan.gui.generated.method.VersLeistINSMethod</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>true</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pVSNUM">
+			<mapping>
+				<parameter name="pVSNUM"/>
+			</mapping>
+		</parameter>
+		<parameter name="pBERDAT">
+			<mapping>
+				<parameter name="pIKVALUTA"/>
+			</mapping>
+		</parameter>
+		<check-before-open>
+			enabled=@SUBSTRING[pEKOPT_180,2,1]='1';
+		</check-before-open>
+	</aktion>
+	<aktion aktionlfnr="203" name="Anzeige berechnete EK-Werte">
+		<beschreibung>Anzeige berechnete EK-Werte</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname createnewrow="false" deletepermission="false" externalbo="VersLeist" externalmodul="pvclan" querypermission="false" type="V">ch.claninfo.pvclan.gui.generated.view.PlanBerWertView</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>true</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pVSNUM">
+			<mapping>
+				<parameter name="pVSNUM"/>
+			</mapping>
+		</parameter>
+		<parameter name="pBERDAT">
+			<mapping>
+				<parameter name="pBERDAT"/>
+			</mapping>
+		</parameter>
+		<parameter name="pVARLIST">
+			<mapping>
+				<parameter defaultwert="10" name="pVARLIST"/>
+			</mapping>
+		</parameter>
+		<parameter name="pVARSEM">
+			<mapping>
+				<parameter defaultwert="70" name="pVARSEM"/>
+			</mapping>
+		</parameter>
+		<check-before-open>
+			enabled=@SUBSTRING[pEKOPT_180,2,1]='1' @OR @SUBSTRING[pEKOPT_180,3,1]='1';
+		</check-before-open>
+	</aktion>
+	<aktion aktionlfnr="204" name="Aktuelle Berechnung zurücksetzen">
+		<beschreibung>Aktuelle Berechnung zurücksetzen</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="M">ch.claninfo.pvclan.gui.generated.method.VersLeistDELMethod</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>false</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pVSNUM">
+			<mapping>
+				<parameter name="pVSNUM"/>
+			</mapping>
+		</parameter>
+		<parameter name="pBERDAT">
+			<mapping>
+				<parameter name="pBERDAT"/>
+			</mapping>
+		</parameter>
+		<parameter name="pLABERDAT" globalparameter="true">
+			<mapping>
+				<parameter name="pBERDAT"/>
+			</mapping>
+		</parameter>
+		<check-before-open>
+			enabled=@SUBSTRING[pEKOPT_180,2,1]='1' @OR @SUBSTRING[pEKOPT_180,3,1]='1';
+		</check-before-open>
+	</aktion>
+	<aktion aktionlfnr="205" name="Nullbuchung stornieren">
+		<beschreibung>Einkaufsbuchung Betrag 0 stornieren</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="M">ch.claninfo.pvclan.gui.generated.method.VersKontoBuchungenStornoDELMethod</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>false</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pIKKTOART">
+			<mapping>
+				'WZB'
+			</mapping>
+		</parameter>		
+		<parameter name="pIKVALUTA">
+			<mapping>
+				<parameter name="pBERDAT"/>
+			</mapping>
+		</parameter>
+		<parameter name="pIKBUNR">
+			<mapping>
+            @IF pPLTYP='LP' @TH @SELECT['pIKBUNR', 'pvclan', 'VersKontoBuchungen', 'pVSNUM=:N AND pIKKTOART=:S AND pIKBUART=:N AND pIKVALUTA=:D AND pPROCNR=:N AND pIKSTOBUNR IS NULL', pVSNUM,'WZB',407, @CVD[pBERDAT],0]		
+            @ELSE @SELECT['pIKBUNR', 'pvclan', 'VersKontoBuchungen', 'pVSNUM=:N AND pIKKTOART=:S AND pIKBUART=:N AND pIKVALUTA=:D AND pPROCNR=:N AND pIKSTOBUNR IS NULL', pVSNUM,'WZB',407, @CVD[pBERDAT],0]		
+			</mapping>
+		</parameter>
+		<konstante name="pIKBETRAG">0</konstante>
+		<konstante name="pIKBUART">134</konstante>
+		<konstante name="pIKBUSTAT">1</konstante>
+		<parameter name="pIKBUART"/>
+		<check-before-open>
+			enabled=@SUBSTRING[pEKOPT_180,2,1]='1';
+		</check-before-open>
+	</aktion>
+	<aktion aktionlfnr="320" name="Ratenbetrag erfassen">	
+		<beschreibung>Ratenbetrag erfassen</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="V" createnewrow="true">ch.claninfo.pvclan.gui.generated.view.VersKontoView</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>false</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>true</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pVSNUM">
+			<mapping>
+				<parameter name="pVSNUM"/>
+			</mapping>
+		</parameter>
+		<parameter name="pIKVALUTA"/>
+		<parameter name="pIKKTOART">
+			<mapping>
+				'BEWLP'
+			</mapping>
+		</parameter>		
+		<konstante name="pIKBUART">1122</konstante>
+		<check-before-open>
+			enabled=pPLTYP = 'LP' @AND (@SUBSTRING[pEKOPT_180,2,1]='1' @OR @SUBSTRING[pEKOPT_180,3,1]='1');
+		</check-before-open>
+	</aktion>
+	<aktion aktionlfnr="340" name="Raten Anzahl 60 ändern ">	
+		<beschreibung>Raten Anzahl 60 ändern</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="V" createnewrow="true">ch.claninfo.pvclan.gui.generated.view.VersKontoView</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>false</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>true</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pVSNUM">
+			<mapping>
+				<parameter name="pVSNUM"/>
+			</mapping>
+		</parameter>
+		<parameter name="pIKVALUTA">
+			<mapping>
+				<parameter name="pIKVALUTA"/>
+			</mapping>
+		</parameter>
+		<konstante name="pIKBETRAG">60</konstante>
+		<konstante name="pIKBUART">1100</konstante>
+		<parameter name="pIKKTOART">
+			<mapping>
+				'BEWLP'
+			</mapping>
+		</parameter>		
+		<check-before-open>
+			enabled=pPLTYP='LP' @AND (@SUBSTRING[pEKOPT_180,2,1]='1' @OR @SUBSTRING[pEKOPT_180,3,1]='1');
+		</check-before-open>
+	</aktion>
+	<aktion aktionlfnr="360" name="Zusatzbeitrag erfassen">	
+		<beschreibung>Zusatzbeitrag erfassen</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="V" createnewrow="true">ch.claninfo.pvclan.gui.generated.view.VersKontoView</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>false</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>true</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pVSNUM">
+			<mapping>
+				<parameter name="pVSNUM"/>
+			</mapping>
+		</parameter>
+		<parameter name="pIKVALUTA"/>
+		<parameter name="pIKKTOART">
+			<mapping>
+				'BEWLP'
+			</mapping>
+		</parameter>		
+		<konstante name="pIKBUART">1118</konstante>
+		<check-before-open>
+			enabled=pPLTYP='LP' @AND (@SUBSTRING[pEKOPT_180,2,1]='1' @OR @SUBSTRING[pEKOPT_180,3,1]='1');
+		</check-before-open>
+	</aktion>
+	<aktion aktionlfnr="500" name="Einkauf berechen">
+		<beschreibung>Einkauf berechen</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="M">ch.claninfo.pvclan.gui.generated.method.VersLeistINSMethod</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>true</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pBERDAT">
+			<mapping>
+          @FORMAT['{0,date,dd.MM.yyyy}',@SELECT['pNEXTBERDAT', 'pvclan', 'Vers', 'pPENUM=:S', pPENUM]]
+			</mapping>
+		</parameter>
+		<check-before-close>
+				goto=@IF @SELECT['pNEXTBERDAT', 'pvclan', 'Vers', 'pPENUM=:S', pPENUM] !=@NULL @TH 500 @ELSE -1;						
+		</check-before-close>
+	</aktion>
+	<aktion aktionlfnr="505" name="Anzeige Überschuss" autoabschluss="true">
+		<beschreibung>Anzeige Überschuss</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<mandatory>true</mandatory>
+		<aktiv>true</aktiv>
+		<classname type="W"/>
+		<laufzeit>0</laufzeit>
+		<classconfig>
+			<gui-param name="pEKUE" type="string" readonly="true">Überschuss</gui-param>
+		</classconfig>	
+		<parameter name="pBERDAT">
+			<mapping>
+				<parameter name="pBERDAT"/>
+			</mapping>
+		</parameter>
+		<parameter name="pEKUE">
+		  <mapping>
+		  @NUMBER[@SELECT['pWERT', 'pvclan', 'PlanVarWert', 'pVSNUM=:N AND pPLANTYP=:S AND pVARNA=:S AND pBERDAT=:D', pVSNUM, 'LB', 'EKUE', @CVD[pBERDAT]]]
+		  </mapping>
+		</parameter>
+		<check-before-open>
+			enabled=@NUMBER[@SELECT['pWERT', 'pvclan', 'PlanVarWert', 'pVSNUM=:N AND pPLANTYP=:S AND pVARNA=:S AND pBERDAT=:D', pVSNUM, 'LB', 'EKUE', @CVD[pBERDAT]]] > 0
+		</check-before-open>
+	</aktion>	
+	<aktion aktionlfnr="520" name="Anzeige berechnete EK-Werte">
+		<beschreibung>Anzeige berechnete EK-Werte</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="V" 
+		   createnewrow="false" 
+		   deletepermission="false" 
+		   querypermission="false"
+   		   externalbo="VersLeist" externalmodul="pvclan">ch.claninfo.pvclan.gui.generated.view.PlanBerWertView</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>true</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pBERDAT">
+			<mapping>
+				<parameter name="pLABERDAT"/>
+			</mapping>
+		</parameter>
+		<parameter name="pVARLIST">
+			<mapping>
+				<parameter name="pVARLIST" defaultwert="10"/>
+			</mapping>
+		</parameter>
+		<parameter name="pVARSEM">
+			<mapping>
+				<parameter name="pVARSEM" defaultwert="70"/>
+			</mapping>
+		</parameter>
+	</aktion>
+	<aktion aktionlfnr="560" name="Bestätigung Einkauf versenden">
+		<beschreibung>Bestätigung versenden</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="W"/>
+		<classconfig>
+			<gui-param name="pBRIEFID">
+				<select text="Bestätigungstyp">
+					<option>Volleinkauf (D309)</option>
+					<option>Teileinkauf (D309A)</option>
+					<option>Einkauf mit Überschuss (D309B)</option>
+					<option>Ratenzahlung Amortisation (D309C - RZA)</option>
+					<option>Ratenzahlung Zusatzbeitrag (D309C - MZB)</option>
+					<option>ok - weiter</option>
+				</select>
+			</gui-param>
+			<gui-param name="pABLAUF" type="date">Termin bei Überschuss</gui-param>
+			<gui-param name="pBEM" readonly="true" type="string">Bemerkung</gui-param>
+			<configurator>
+				what=@IF @SUBSTRING[pBRIEFID,1,1]='1' @TH 'D309' @ELIF @SUBSTRING[pBRIEFID,2,1]='1' @TH 'D309A' @ELIF @SUBSTRING[pBRIEFID,3,1]='1' @TH 'D309B' @ELIF @SUBSTRING[pBRIEFID,4,1]='1' @TH 'D309C-RZA' @ELIF @SUBSTRING[pBRIEFID,5,1]='1' @TH 'D309B-MZB' @ELSE @NULL;
+				ablaufdatum=@FORMAT['{0,date,dd.MM.yyyy}',@ADDWORKDAYS[@CVD['NOW'],10]];
+				ablaufzeit=@IF pABLAUF = @NULL @TH ablaufdatum @ELSE @FORMAT['{0,date,dd.MM.yyyy}',pABLAUF];
+				pABLAUF.value=@IF what='D309B' @TH ablaufzeit @ELSE @NULL;
+				pBEM.value=@IF what='D309B' @TH 'Auf '+ what + ' bis '+ ablaufzeit + ' warten.' @ELIF what='D309' @TH 'Volleinkauf' @ELIF what='D309A' @TH 'Teileinkauf' @ELIF what='D309C-RZA' @TH 'Ratenzahlung Amortisation' @ELIF what='D309B-MZB' @TH 'Ratenzahlung Zusatzbeitrag' @ELSE @NULL;	
+			</configurator>
+		</classconfig>
+		<laufzeit>0</laufzeit> 
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>true</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pBUNR">
+			<mapping>
+			@IF @SUBSTRING[pEKOPT_180,2,1]='1' @TH 0 @ELSE @SELECT['pBUNR_TOT', 'pvclan', 'Fibuzaein', 'pBUNR_FIBU=:N', pBUNR_FIBU]
+			</mapping>
+		</parameter>
+		<parameter name="pBRIEFID">
+		  <mapping>
+		   @IF @NUMBER[@SELECT['pWERT', 'pvclan', 'PlanVarWert', 'pVSNUM=:N AND pPLANTYP=:S AND pVARNA=:S AND pBERDAT=:D', pVSNUM, 'LB', 'EKAMODIF', @CVD[pBERDAT]]] > 0 @TH '010000'
+		   @ELIF @NUMBER[@SELECT['pWERT', 'pvclan', 'PlanVarWert', 'pVSNUM=:N AND pPLANTYP=:S AND pVARNA=:S AND pBERDAT=:D', pVSNUM, 'LB', 'EKUE', @CVD[pBERDAT]]] > 0 @TH '001000'
+		   @ELSE '100000'
+		   </mapping>
+		</parameter>
+		<parameter name="pBEM"/>
+		<parameter name="pABLAUF"/>
+		<parameter name="pABLAUFZEIT">
+			<mapping>
+		       	<parameter name="pABLAUF"/>
+			</mapping>
+		</parameter>
+		<parameter name="pBERDAT">
+			<mapping>
+				<parameter name="pBERDAT"/>
+			</mapping>
+		</parameter>
+		<check-before-close>
+		  bunr=@IF pPLTYP='LP' @AND @SUBSTRING[pBRIEFID,4,1]='1' @TH 
+		       @SELECT['pIKBUNR', 'pvclan', 'VersKontoBuchungen', 'pVSNUM=:N AND pIKKTOART=:S AND pIKBUART=:N AND pIKVALUTA=:D AND pPROCNR=:N AND pIKSTOBUNR IS NULL', pVSNUM,'BEWLP',1158,@CVD[pBERDAT],0]
+			   @ELIF pPLTYP='LP' @AND @SUBSTRING[pBRIEFID,5,1]='1' @TH 
+   			   @SELECT['pIKBUNR', 'pvclan', 'VersKontoBuchungen', 'pVSNUM=:N AND pIKKTOART=:S AND pIKBUART=:N AND pIKVALUTA=:D AND pPROCNR=:N AND pIKSTOBUNR IS NULL', pVSNUM,'BEWLP',1118,@CVD[pBERDAT],0]	
+			   @ELIF pPLTYP='BP' @TH 
+			   @SELECT['pIKBUNR', 'pvclan', 'VersKontoBuchungen', 'pVSNUM=:N AND pIKKTOART=:S AND pIKBUART=:N AND pIKVALUTA=:D AND pPROCNR=:N AND pIKSTOBUNR IS NULL', pVSNUM,'BEWBP',134,@CVD[pBERDAT],0]	
+			   @ELIF pPLTYP='LP' @TH 
+			   @SELECT['pIKBUNR', 'pvclan', 'VersKontoBuchungen', 'pVSNUM=:N AND pIKKTOART=:S AND pIKBUART=:N AND pIKVALUTA=:D AND pPROCNR=:N AND pIKSTOBUNR IS NULL', pVSNUM,'BEWLP',134,@CVD[pBERDAT],0]	
+			   @ELSE @NULL;
+			   laufzeit=@CVD[pABLAUF]-@CVD['NOW'];
+			visualize=@IF @SUBSTRING[pBRIEFID,1,1]='1' @TH @JOINFILES[
+			          @PROCESS['XO_VERSBRIEF_EIN','pVSNUM',pVSNUM,'BriefId','D309', 'pBUNR', pBUNR],
+					      @PROCESS['VA','pVSNUM',pVSNUM],
+					      @PROCESS['XO_EDP21','pBUNR',bunr]]
+			@ELIF @SUBSTRING[pBRIEFID,2,1]='1' @TH @JOINFILES[@PROCESS['XO_VERSBRIEF_EIN','pVSNUM',pVSNUM,'BriefId','D309A', 'pBUNR', pBUNR],
+			                                      @PROCESS['VA','pVSNUM',pVSNUM],
+			                                      @PROCESS['XO_EDP21','pBUNR',bunr]]
+			@ELIF @SUBSTRING[pBRIEFID,3,1]='1' @TH @JOINFILES[@PROCESS['XO_VERSBRIEF_EIN','pVSNUM',pVSNUM,'BriefId','D309B','pWFTERMIN',laufzeit, 'pBERDAT', pBERDAT, 'pBUNR', pBUNR],
+			                                      @PROCESS['VA','pVSNUM',pVSNUM],
+			                                      @PROCESS['XO_EDP21','pBUNR',bunr], 
+			                                      @PROCESS['XO_F005','pVSNUM',pVSNUM]] 
+			@ELIF @SUBSTRING[pBRIEFID,4,1]='1' @TH @JOINFILES[@PROCESS['XO_VERSBRIEF_EIN','pVSNUM',pVSNUM,'BriefId','D309C','BriefVariante','RZA', 'pBUNR', bunr],
+			                                      @PROCESS['VA','pVSNUM',pVSNUM]]
+			@ELIF @SUBSTRING[pBRIEFID,5,1]='1' @TH @JOINFILES[@PROCESS['XO_VERSBRIEF_EIN','pVSNUM',pVSNUM,'BriefId','D309C','BriefVariante','MZB', 'pBUNR', bunr],
+			                                      @PROCESS['VA','pVSNUM',pVSNUM]]
+			@ELSE @NULL;
+			goto=@IF @SUBSTRING[pBRIEFID,3,1]='1' @TH 560 @ELIF @SUBSTRING[pBRIEFID,6,1]='1' @TH -1 @ELSE 999 ;
+		</check-before-close>
+	</aktion>
+	<aktion aktionlfnr="600" name="Aufruf Rückzahlung Überschuss" autoabschluss="true">
+		<beschreibung>WF silent</beschreibung>
+		<pool>Common</pool>
+		<aktiv>true</aktiv>
+		<dummy>false</dummy>
+		<classname type="P" executeMode="SYNC">WF_KAP_RZ</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>true</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<parameter name="pBERDAT"> 
+			<mapping> 
+				<parameter name="pLABERDAT"/> 
+			</mapping> 
+		</parameter> 
+		<parameter name="pVSNUM_WF"> 
+			<mapping> 
+				<parameter name="pVSNUM"/> 
+			</mapping> 
+		</parameter> 
+        	<parameter name="pPROZESS_BEM">
+			<mapping>
+				<parameter name="pPROZESS_BEM"/>
+			</mapping>
+		</parameter>
+        	<parameter name="pWFTYP">
+			<mapping>
+				<parameter name="pWFTYP" defaultwert="EINK"/>
+			</mapping>
+		</parameter>
+        	<parameter name="pPOOL">
+			<mapping>session.uid</mapping>
+		</parameter>
+        	<parameter name="pINITIATOR_ID">
+			<mapping>prozessid</mapping>
+		</parameter>
+		<parameter name="pBRIEFID">
+			<mapping>
+				<parameter name="pBRIEFID"/>
+			</mapping>
+		</parameter>	
+		<check-before-open>
+			enabled=@NUMBER[@SELECT['pWERT', 'pvclan', 'PlanVarWert', 'pVSNUM=:N AND pPLANTYP=:S AND pVARNA=:S AND pBERDAT=:D', pVSNUM, 'LB', 'EKUE', @CVD[pBERDAT]]] > 0 @AND pPLTYP='LP';
+		</check-before-open>
+		<check-before-close>
+			goto=999;
+		</check-before-close>
+	</aktion>
+	<aktion aktionlfnr="999" name="Endeaktion" autoabschluss="false" ponr="true">
+		<beschreibung>Prozess abschliessen</beschreibung>
+		<pool>Common</pool>
+		<dummy>true</dummy>
+		<classname/>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>true</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<aktiv>true</aktiv>
+	</aktion>
+	<aktion aktionlfnr="30" name="Buchung erstellen im INFO-Konto">
+		<beschreibung>Buchung erstellen im INFO-Konto</beschreibung>
+		<pool>Common</pool>
+		<dummy>false</dummy>
+		<classname type="V" createnewrow="true">pvclan.VersKonto</classname>
+		<laufzeit>0</laufzeit>
+		<loop>false</loop>
+		<exklusiv>false</exklusiv>
+		<mandatory>true</mandatory>
+		<wiederholung>false</wiederholung>
+		<pendent>false</pendent>
+		<aktiv>true</aktiv>
+		<parameter name="pVSNUM">
+			<mapping>
+				<parameter name="pVSNUM"/>
+			</mapping>
+		</parameter>	
+		<parameter name="pPENUM">
+			<mapping>
+				<parameter name="pPENUM"/>
+			</mapping>
+		</parameter>		
+		<parameter name="pIKVALUTA"/>
+		<konstante name="pIKKTOART" where="true">INFO</konstante>
+		<parameter name="pIKBUART">
+			<mapping>
+			@IF @SUBSTRING[pGF,1,1]='1' @TH 360 @ELIF @SUBSTRING[pGF,2,1]='1' @TH 18008 @ELIF @SUBSTRING[pGF,3,1]='1' @TH 330 @ELSE 296
+			</mapping>
+		</parameter>	
+		<check-before-close>
+			INFODAT=@SELECT['pIKVALUTA','pvclan','VersKontoBuchungen','pIKKTOART = :S AND pVSNUM = :N AND pIKVALUTA =  TO_DATE(:S,:S) AND pIKBUART IN(360, 18008, 330, 296) AND pIKSTOBUNR IS NULL ','INFO',pVSNUM,pIKVALUTA,'DD.MM.YYYY'];
+			brcode=@IF INFODAT = @NULL @TH 0
+		           @ELIF @CVD[pIKVALUTA] &lt; @CVD[pLABERDAT] @TH @METHOD['pZIELDAT','pvclan','VersRueWiKorr','UPD','pVSNUM',pVSNUM,'pZIELDAT',pIKVALUTA]
+			       @ELSE 0;
+		</check-before-close>
+		<do-after-close>
+		    INFODAT=@SELECT['pIKVALUTA','pvclan','VersKontoBuchungen','pIKKTOART = :S AND pVSNUM = :N AND pIKVALUTA =  TO_DATE(:S,:S) AND pIKBUART IN(360, 18008, 330, 296) AND pIKSTOBUNR IS NULL ','INFO',pVSNUM,pIKVALUTA,'DD.MM.YYYY'];
+			execute=@IF INFODAT = @NULL @TH 0
+		            @ELIF @CVD[pIKVALUTA] &lt; @CVD[pLABERDAT] @TH @METHOD['pZIELDAT','pvclan','VersRueWiKorr','INS','pVSNUM',pVSNUM,'pZIELDAT',pLABERDAT] 
+			        @ELSE @METHOD['pBERDAT','pvclan','VersLeist','INS','pVSNUM',pVSNUM,'pBERDAT',pIKVALUTA];			
+		</do-after-close>	
+	</aktion>
+ </prozessdef>
