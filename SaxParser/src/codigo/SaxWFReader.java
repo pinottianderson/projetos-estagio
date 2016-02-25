@@ -1,6 +1,7 @@
 package codigo;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +69,7 @@ public class SaxWFReader extends DefaultHandler {
 		}else{
 			//lançar exception
 		}
+		
 	}
 	
 	public void parse(FileInputStream file) throws ParserConfigurationException, SAXException, IOException{
@@ -76,8 +78,8 @@ public class SaxWFReader extends DefaultHandler {
 		parser.parse(file, this );
 	}
 	
-	public void parse(){
-		//aktion.createXml(uriOut);
+	public void parse(FileOutputStream fileOut) throws ParserConfigurationException, TransformerException{
+		xmlOut.createXml(fileOut);
 	}
 
 	public void startElement(String uri, String localName, String tag, Attributes atts) {
