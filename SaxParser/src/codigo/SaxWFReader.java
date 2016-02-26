@@ -59,10 +59,12 @@ public class SaxWFReader extends DefaultHandler {
 	 */
 	public void parse(File dir) throws ParserConfigurationException, SAXException, IOException, TransformerException {
 		if (dir.isDirectory()) {
-			String[] files = dir.list();
+			File[] files = dir.listFiles();
 			for (int i = 0; i < files.length; i++) {
-				if (files[i].endsWith(ENDS_WITH)) {
-					parse(files[i]);
+				if (files[i].toString().endsWith(ENDS_WITH)) {
+					FileInputStream fileStream = new FileInputStream(files[i]);
+					parse(fileStream);
+					fileStream.close();
 				}
 			}
 		}else{
@@ -71,14 +73,15 @@ public class SaxWFReader extends DefaultHandler {
 		
 	}
 	
-	public void parse(String file) throws ParserConfigurationException, SAXException, IOException{
+	public void parse(FileInputStream file) throws ParserConfigurationException, SAXException, IOException, TransformerException{
 		SAXParserFactory spf = SAXParserFactory.newInstance();
 		SAXParser parser = spf.newSAXParser(); 
 		parser.parse(file, this );
+		xmlOut.createXml();
 	}
 	
 	public void parse(FileOutputStream fileOut) throws ParserConfigurationException, TransformerException{
-		xmlOut.createXml(fileOut);
+		//xmlOut.createXml(fileOut);
 	}
 
 	public void startElement(String uri, String localName, String tag, Attributes atts) {
