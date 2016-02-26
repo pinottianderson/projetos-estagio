@@ -57,8 +57,7 @@ public class SaxWFReader extends DefaultHandler {
 	 * @throws IOException
 	 * @throws TransformerException 
 	 */
-	public void parse(String file) throws ParserConfigurationException, SAXException, IOException, TransformerException {
-		File dir = new File(file);
+	public void parse(File dir) throws ParserConfigurationException, SAXException, IOException, TransformerException {
 		if (dir.isDirectory()) {
 			String[] files = dir.list();
 			for (int i = 0; i < files.length; i++) {
@@ -72,7 +71,7 @@ public class SaxWFReader extends DefaultHandler {
 		
 	}
 	
-	public void parse(FileInputStream file) throws ParserConfigurationException, SAXException, IOException{
+	public void parse(String file) throws ParserConfigurationException, SAXException, IOException{
 		SAXParserFactory spf = SAXParserFactory.newInstance();
 		SAXParser parser = spf.newSAXParser(); 
 		parser.parse(file, this );
