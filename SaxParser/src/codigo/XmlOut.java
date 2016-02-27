@@ -1,5 +1,4 @@
 package codigo;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -73,7 +72,7 @@ public class XmlOut {
 	/**
 	 * Create output document
 	 */
-	public void createXml() throws ParserConfigurationException, TransformerException {
+	public void createXml(FileOutputStream fileOut) throws ParserConfigurationException, TransformerException {
 		if(!mapModul.isEmpty()){
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db;
@@ -122,7 +121,7 @@ public class XmlOut {
 			TransformerFactory tf = TransformerFactory.newInstance();
 			Transformer trans = tf.newTransformer();
 			DOMSource fontDocument = new DOMSource(doc);
-			StreamResult finalDocument = new StreamResult("/home/pal/Área de Trabalho/xml/test/out/document.xml");
+			StreamResult finalDocument = new StreamResult(fileOut);
 			trans.transform(fontDocument, finalDocument); 
 		}
 	}
