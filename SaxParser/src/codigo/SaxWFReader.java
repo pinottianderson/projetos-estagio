@@ -172,10 +172,10 @@ public class SaxWFReader extends DefaultHandler {
 	 * @return
 	 */
 	public String setValues(String temp) {
-		String method;
-		String tempClassname;
-		String tempModul;
-		String tempBo;
+		String method        = "";
+		String tempClassname = "";
+		String tempModul     = "";
+		String tempBo        = "";
 		if (temp.trim().startsWith("ch.")) {
 			tempModul = temp.trim().substring(12, 19);
 			tempBo = temp.substring((temp.lastIndexOf(".") + 1), temp.length());
@@ -248,9 +248,9 @@ public class SaxWFReader extends DefaultHandler {
 	 * @param temp
 	 */
 	public void setSelect(String temp) {
-		String bo = "";
-		String modul = "";
-		String param = "";
+		String bo        = "";
+		String modul     = "";
+		String param     = "";
 		String tempmodul = "";
 		for (String str : temp.split("'")) {
 			if (param.isEmpty()) {
@@ -261,7 +261,7 @@ public class SaxWFReader extends DefaultHandler {
 				modul = str;
 			} else if (bo.isEmpty()) {
 				if(str.contains("_")){
-					bo = remUnder(str);
+					bo = setParameter(str);
 				}else{
 					bo = str;
 				}
@@ -309,7 +309,7 @@ public class SaxWFReader extends DefaultHandler {
 					modul = str;
 				} else if (bo.isEmpty()) {
 					if(str.contains("_")){
-						bo = remUnder(str);
+						bo = setParameter(str);
 					}else{
 						bo = str;
 					}
@@ -327,40 +327,19 @@ public class SaxWFReader extends DefaultHandler {
 	}
 	
 	/**
-	 * Remove underline and edit String
+	 * Edit String of parameter
 	 * @param str
 	 * @return
 	 */
-	public String remUnder(String str){
-		if(str.endsWith("_")){
-			str.replace("_", "");
-			return str;
-		}else{
-			int underline = str.indexOf("_");
-			str = str.replace("_", "");
-			String first = str.substring(0, underline);
-			String under = str.substring(underline, underline + 1).toUpperCase();
-			String last  = str.substring(underline + 1, str.length());
-			str = first + under + last;
-			return str;
+	public String setParameter(String str){
+		String result = "";
+		str = str.substring(1, str.length());
+		str = str.toLowerCase();
+		String[] st = str.split("_");
+		for(String string : st){
+			result = result + string.replaceFirst(string.substring(0, 1), string.substring(0, 1).toUpperCase());
 		}
-	}
-	
-	/**
-	 * Edit String of parameter
-	 * @param temp
-	 * @return
-	 */
-	public String setParameter(String temp) {
-		temp = temp.toLowerCase();
-		String tempPar = temp.substring(1, temp.length());
-		String firstLetter = tempPar.substring(0, 1).toUpperCase();
-		tempPar = firstLetter + tempPar.substring(1, tempPar.length());
-		if (tempPar.trim().contains("_")) {
-			tempPar = remUnder(tempPar);
-			return tempPar;
-		} else {
-			return tempPar;
-		}
+		result = result.replaceAll("_", "");
+		return result.trim();
 	}
 }

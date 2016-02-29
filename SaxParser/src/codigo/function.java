@@ -19,5 +19,8 @@ public class function {
 		SaxWFReader reader = new SaxWFReader();
 		reader.parse(uriIn, uriOut);	
 		//reader.parse(dir, uriOut);
+		
+		uriIn.close();
+		uriOut.close();
 	}
 }
