@@ -58,19 +58,14 @@ public class SaxWFReader extends DefaultHandler {
 	 * @throws TransformerException 
 	 */
 	public void parse(File dir, FileOutputStream fileOut) throws ParserConfigurationException, SAXException, IOException, TransformerException {
-		if (dir.isDirectory()) {
-			File[] files = dir.listFiles();
-			for (int i = 0; i < files.length; i++) {
-				if (files[i].toString().endsWith(ENDS_WITH)) {
-					FileInputStream fileStream = new FileInputStream(files[i]);
-					parse(fileStream, fileOut);
-					fileStream.close();
-				}
+		File[] files = dir.listFiles();
+		for (int i = 0; i < files.length; i++) {
+			if (files[i].toString().endsWith(ENDS_WITH)) {
+				FileInputStream fileStream = new FileInputStream(files[i]);
+				parse(fileStream, fileOut);
+				fileStream.close();
 			}
-		}else{
-			//lançar exception
 		}
-		
 	}
 	
 	public void parse(FileInputStream file, FileOutputStream fileOut) throws ParserConfigurationException, SAXException, IOException, TransformerException{
@@ -177,7 +172,8 @@ public class SaxWFReader extends DefaultHandler {
 		String tempModul     = "";
 		String tempBo        = "";
 		if (temp.trim().startsWith("ch.")) {
-			tempModul = temp.trim().substring(12, 19);
+			temp = temp.substring(12, temp.length());
+			tempModul = temp.trim().substring(0, temp.indexOf(".")+1);
 			tempBo = temp.substring((temp.lastIndexOf(".") + 1), temp.length());
 			if (tempBo.contains("View")) {
 				tempBo = tempBo.substring(0, (tempBo.length() - 4));
@@ -260,11 +256,7 @@ public class SaxWFReader extends DefaultHandler {
 			} else if (modul.isEmpty()) {
 				modul = str;
 			} else if (bo.isEmpty()) {
-				if(str.contains("_")){
-					bo = setParameter(str);
-				}else{
-					bo = str;
-				}
+				bo = setParameter(str);
 			}
 		}
 		tempmodul = modul + "." + bo;
@@ -288,7 +280,7 @@ public class SaxWFReader extends DefaultHandler {
 	}
 
 	/**
-	 * Get the content of checkMethod and send to the aktion object
+	 * Get the content of checkMethod and send to the xmlOut object
 	 * @param temp
 	 */
 	public void setMethod(String temp) {
@@ -308,11 +300,7 @@ public class SaxWFReader extends DefaultHandler {
 				} else if (modul.isEmpty()) {
 					modul = str;
 				} else if (bo.isEmpty()) {
-					if(str.contains("_")){
-						bo = setParameter(str);
-					}else{
-						bo = str;
-					}
+					bo = setParameter(str);
 				} else if (method.isEmpty()) {
 					method = str;
 					setMethod.add(method);
@@ -335,11 +323,16 @@ public class SaxWFReader extends DefaultHandler {
 		String result = "";
 		str = str.substring(1, str.length());
 		str = str.toLowerCase();
-		String[] st = str.split("_");
-		for(String string : st){
-			result = result + string.replaceFirst(string.substring(0, 1), string.substring(0, 1).toUpperCase());
+		if(str.contains("_")){
+			String[] st = str.split("_");
+			for(String string : st){
+				result = result + string.replaceFirst(string.substring(0, 1), string.substring(0, 1).toUpperCase());
+			}
+			result = result.replaceAll("_", "");
+			return result.trim();
+		}else{
+			str = str.replaceFirst(str.substring(0, 1), str.substring(0,1).toUpperCase());
+			return str;
 		}
-		result = result.replaceAll("_", "");
-		return result.trim();
 	}
 }
