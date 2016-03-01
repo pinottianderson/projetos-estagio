@@ -178,22 +178,20 @@ public class SaxWFReader extends DefaultHandler {
 			if (tempBo.contains("View")) {
 				tempBo = tempBo.substring(0, (tempBo.length() - 4));
 			} else {
-				method = tempBo.substring((tempBo.length() - 9), tempBo.length());
-				method = method.substring(0, 3);
-				tempBo = tempBo.substring(0, (tempBo.length() - 9));
+				method = tempBo.substring((tempBo.length() - 9), tempBo.length()-6);
 				paramOpen = true;
 				setParam.add(method);
 				paramOpen = false;
+				tempBo = tempBo.substring(0, (tempBo.length() - 9));
 			}
 			tempClassname = tempModul + tempBo;
 			return tempClassname;
 		} else if (temp.contains("/")) {
-			method = temp.trim().substring((temp.trim().length() - 4), temp.trim().length());
-			method = method.substring(1, method.length());
-			tempClassname = temp.trim().substring(0, temp.trim().length() - 4);
+			method = temp.trim().substring((temp.trim().length() - 3), temp.trim().length());
 			paramOpen = true;
 			setParam.add(method);
 			paramOpen = false;
+			tempClassname = temp.trim().substring(0, temp.trim().length() - 4);
 			return tempClassname;
 		} else {
 			tempClassname = temp.trim();
@@ -320,19 +318,26 @@ public class SaxWFReader extends DefaultHandler {
 	 * @return
 	 */
 	public String setParameter(String str){
-		String result = "";
-		str = str.substring(1, str.length());
-		str = str.toLowerCase();
-		if(str.contains("_")){
-			String[] st = str.split("_");
-			for(String string : st){
-				result = result + string.replaceFirst(string.substring(0, 1), string.substring(0, 1).toUpperCase());
+		if(str.startsWith("p")){
+			String result = "";
+			str = str.substring(1, str.length());
+			str = str.toLowerCase();
+			if(str.contains("_")){
+				String[] st = str.split("_");
+				System.out.println(st);
+				for(String string : st){
+					System.out.println(string);
+					result = result + string.replaceFirst(string.substring(0, 1), string.substring(0, 1).toUpperCase());
+				}
+				result = result.replaceAll("_", "");
+				return result.trim();
+			}else{
+				str = str.replaceFirst(str.substring(0, 1), str.substring(0,1).toUpperCase());
+				return str;
 			}
-			result = result.replaceAll("_", "");
-			return result.trim();
 		}else{
-			str = str.replaceFirst(str.substring(0, 1), str.substring(0,1).toUpperCase());
 			return str;
 		}
+		
 	}
 }

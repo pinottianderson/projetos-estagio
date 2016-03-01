@@ -12,15 +12,15 @@ import org.xml.sax.SAXException;
 public class function {
 	
 	public static void main(String[] args) throws TransformerException, ParserConfigurationException, SAXException, IOException {
-		FileInputStream uriIn  = new FileInputStream("/home/pal/햞ea de Trabalho/xml/test/in/WFTest.xml");
+		//FileInputStream uriIn  = new FileInputStream("/home/pal/햞ea de Trabalho/xml/test/in/WFTest.xml");
 		FileOutputStream uriOut = new FileOutputStream("/home/pal/햞ea de Trabalho/xml/out/document.xml");
 		File dir = new File("/home/pal/햞ea de Trabalho/xml/in");
 		
 		SaxWFReader reader = new SaxWFReader();
-		reader.parse(uriIn, uriOut);	
-		//reader.parse(dir, uriOut);
+		//reader.parse(uriIn, uriOut);	
+		reader.parse(dir, uriOut);
 		
-		uriIn.close();
+		//uriIn.close();
 		uriOut.close();
 	}
 }
